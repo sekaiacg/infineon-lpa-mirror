@@ -41,7 +41,8 @@ public class EuiccInfo {
     private final String euiccFirmwareVer;
     private final String globalplatformVersion;
     private final String sasAcreditationNumber;
-    private final List<String> pkiIds;
+    private final List<String> pkiIdsForSign;
+    private final List<String> pkiIdsForVerify;
     private final PprIds forbiddenProfilePolicyRules;
     private final BerOctetString extCardResource;
 
@@ -58,7 +59,8 @@ public class EuiccInfo {
 
         this.sasAcreditationNumber = euiccInfo2.getSasAcreditationNumber().toString();
 
-        this.pkiIds = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForSigning());
+        this.pkiIdsForSign = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForSigning());
+        this.pkiIdsForVerify = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForVerification());
 
         this.forbiddenProfilePolicyRules = euiccInfo2.getForbiddenProfilePolicyRules();
 
@@ -94,24 +96,36 @@ public class EuiccInfo {
         return sasAcreditationNumber;
     }
 
-    public List<String> getPkiIds() {
-        return pkiIds;
+    public List<String> getPkiIdsForSign() {
+        return pkiIdsForSign;
     }
 
-    public String getPkiIdsAsString(){
+    public List<String> getPkiIdsForVerify() {
+        return pkiIdsForVerify;
+    }
+
+    public String getPkiIdsForSignAsString(){
         StringBuilder sb = new StringBuilder();
 
-        if(pkiIds.isEmpty()) {
-            return "";
-        }
-
-        for(String pkiId : pkiIds) {
+        for(String pkiId : pkiIdsForSign) {
             sb.append(pkiId);
             sb.append("\n");
         }
 
         return sb.subSequence(0, sb.length() - 1).toString();
     }
+
+    public String getPkiIdsForVerifyAsString(){
+        StringBuilder sb = new StringBuilder();
+
+        for(String pkiId : pkiIdsForVerify) {
+            sb.append(pkiId);
+            sb.append("\n");
+        }
+
+        return sb.subSequence(0, sb.length() - 1).toString();
+    }
+
     public String getForbiddenProfilePolicyRules() {
         return forbiddenProfilePolicyRules.toString();
     }
@@ -129,6 +143,16 @@ public class EuiccInfo {
     }
 
     private static List<String> euiccPkiIdList(EUICCInfo2.EuiccCiPKIdListForSigning pkiIdListIn) {
+        List<String> pkiIdList = new ArrayList<>();
+
+        for(SubjectKeyIdentifier ski : pkiIdListIn.getSubjectKeyIdentifier()) {
+            pkiIdList.add(ski.toString());
+        }
+
+        return pkiIdList;
+    }
+
+    private static List<String> euiccPkiIdList(EUICCInfo2.EuiccCiPKIdListForVerification pkiIdListIn) {
         List<String> pkiIdList = new ArrayList<>();
 
         for(SubjectKeyIdentifier ski : pkiIdListIn.getSubjectKeyIdentifier()) {
