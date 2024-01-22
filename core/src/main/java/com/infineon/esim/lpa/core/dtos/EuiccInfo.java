@@ -24,11 +24,12 @@
 package com.infineon.esim.lpa.core.dtos;
 
 import com.beanit.jasn1.ber.types.BerOctetString;
-import com.gsma.sgp.messages.rspdefinitions.CertificationDataObject;
-import com.gsma.sgp.messages.rspdefinitions.PprIds;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
+import com.gsma.sgp.messages.rspdefinitions.CertificationDataObject;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
+import com.gsma.sgp.messages.rspdefinitions.PprIds;
 import com.gsma.sgp.messages.rspdefinitions.VersionType;
+import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,15 @@ public class EuiccInfo {
 
     private static String versionTypeToString(VersionType versionType) {
         if(versionType != null) {
-            return versionType.toString();
+            String vts = versionType.toString();
+            Log.debug(TAG, "Raw version number: \"" + vts + "\"." );
+            if (vts.length() == 6) {
+                int major = Integer.parseInt(vts.substring(0, 2),16);
+                int middle = Integer.parseInt(vts.substring(2, 4),16);
+                int minor = Integer.parseInt(vts.substring(4, 6),16);
+
+                return major + "." + middle + "." + minor;
+            }
         }
 
         return "N/A";
