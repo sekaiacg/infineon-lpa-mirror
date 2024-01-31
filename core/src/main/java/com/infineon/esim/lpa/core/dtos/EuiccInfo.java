@@ -39,6 +39,7 @@ import java.util.List;
 public class EuiccInfo {
     private static final String TAG = EuiccInfo.class.getName();
     private String eid;
+    private String configuredAddresses;
     private final String profileVersion;
     private final String svn;
     private final String euiccFirmwareVer;
@@ -58,15 +59,18 @@ public class EuiccInfo {
     private final String treProductReference;
 
     public EuiccInfo(EUICCInfo2 euiccInfo2) {
-        this(null, euiccInfo2);
+        this(null, null, euiccInfo2);
     }
 
-    public EuiccInfo(String eid, EUICCInfo2 euiccInfo2) {
+    public EuiccInfo(String eid, String configuredAddresses, EUICCInfo2 euiccInfo2) {
         this.eid = eid;
+
+        this.configuredAddresses = configuredAddresses;
 
         this.profileVersion = versionTypeToString(euiccInfo2.getBaseProfilePackageVersion());
         this.svn = versionTypeToString(euiccInfo2.getLowestSvn());
         this.euiccFirmwareVer = versionTypeToString(euiccInfo2.getEuiccFirmwareVersion());
+
         this.ts102241Version = versionTypeToString(euiccInfo2.getTs102241Version());
         this.globalplatformVersion = versionTypeToString(euiccInfo2.getGlobalplatformVersion());
         this.ppVersion = versionTypeToString(euiccInfo2.getPpVersion());
@@ -94,6 +98,21 @@ public class EuiccInfo {
 
     public String getEid() {
         return eid;
+    }
+
+    public void setConfiguredAddresses(String configuredAddresses) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(configuredAddresses);
+        sb.delete(0, 2);
+        int i;
+        while ((i = sb.indexOf("\t")) != -1) {
+            sb.deleteCharAt(i);
+        }
+        this.configuredAddresses = sb.subSequence(0, sb.length() - 2).toString();
+    }
+
+    public String getConfiguredAddresses() {
+        return configuredAddresses;
     }
 
     public String getProfileVersion() {
