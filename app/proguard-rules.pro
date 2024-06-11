@@ -21,3 +21,16 @@
 #-renamesourcefileattribute SourceFile
 
 -keepdirectories com.infineon
+
+-keep class com.infineon.esim.lpa.core.dtos.profile.ProfileMetadata {
+   public *;
+}
+-keep class com.infineon.esim.lpa.core.dtos.profile.ProfileMetadata$* {
+   public *;
+}
+-keep class com.infineon.esim.lpa.core.dtos.ActivationCode {
+   public *;
+}
+-keep class com.infineon.esim.lpa.core.dtos.ActivationCode$* {
+   public *;
+}
