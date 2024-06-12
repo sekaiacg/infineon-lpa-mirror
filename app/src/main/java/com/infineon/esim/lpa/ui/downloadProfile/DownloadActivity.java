@@ -67,6 +67,8 @@ final public class DownloadActivity extends AppCompatActivity {
     private Boolean allowBackButtonPress;
     private TextView textViewHeading;
     private TextView textViewBody;
+    private TextView textViewProfileName;
+    private TextView textViewIccid;
     private TextView textViewDownloadInfo;
     private TextView textViewErrorInfo;
     private TextView textViewConfirmationCode;
@@ -141,6 +143,8 @@ final public class DownloadActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress);
         textViewHeading = findViewById(R.id.text_heading);
         textViewBody = findViewById(R.id.text_body);
+        textViewProfileName = findViewById(R.id.text_profile_name);
+        textViewIccid = findViewById(R.id.text_iccid);
         textViewDownloadInfo = findViewById(R.id.textViewDownloadInfo);
         textViewErrorInfo = findViewById(R.id.text_error_info);
         buttonLeft = findViewById(R.id.button_left);
@@ -167,11 +171,13 @@ final public class DownloadActivity extends AppCompatActivity {
 
         String headingStr = String.format(getString(R.string.download_profile_use_provider_heading), newProfile.getProvider());
         String bodyStr = String.format(getString(R.string.download_profile_use_provider_body), newProfile.getProvider());
+        String profileName = newProfile.getName();
+        String iccid = ProfileMetadata.formatIccidUserString(newProfile.getIccid());
 
         allowBackButtonPress();
         hideProgressBar();
         hideDownloadInfoText();
-        setTextViewItems(headingStr, bodyStr);
+        setTextViewItems(headingStr, bodyStr, profileName, iccid);
         if (isCcRequired) showConfirmationCodeEntry();
         showCancelButton();
         showStartButton();
@@ -188,7 +194,7 @@ final public class DownloadActivity extends AppCompatActivity {
         showDoneButton();
     }
 
-    private void setDownloadScreen(String providerName) {
+    private void setDownloadScreen(String providerName, String profileName, String iccid) {
         String headerStr = getString(R.string.download_profile_downloading_heading);
         String bodyStr = String.format(getString(R.string.download_profile_downloading_body), providerName);
 
@@ -198,7 +204,7 @@ final public class DownloadActivity extends AppCompatActivity {
         hideDownloadInfoText();
         hideErrorInfoText();
         hideConfirmationCodeText();
-        setTextViewItems(headerStr, bodyStr);
+        setTextViewItems(headerStr, bodyStr, profileName, iccid);
         showProgressBar();
     }
 
@@ -206,20 +212,26 @@ final public class DownloadActivity extends AppCompatActivity {
         String headerStr = getString(R.string.download_profile_download_complete_heading);
         String bodyStr = String.format(getString(R.string.download_profile_download_complete_body),
                 profileMetadata.getProvider(), profileMetadata.getProvider());
+        String profileName = profileMetadata.getName();
+        String iccid = ProfileMetadata.formatIccidUserString(profileMetadata.getIccid());
 
         hideDownloadInfoText();
         hideProgressBar();
-        setTextViewItems(headerStr, bodyStr);
+        setTextViewItems(headerStr, bodyStr, profileName, iccid);
 
         showEnableNewProfileButton();
         showKeepCurrentProfileButton();
     }
 
-    private void setTextViewItems(String headingText, String bodyText) {
+    private void setTextViewItems(String headingText, String bodyText, String profileName, String iccid) {
         textViewHeading.setText(headingText);
         textViewHeading.setVisibility(View.VISIBLE);
         textViewBody.setText(bodyText);
         textViewBody.setVisibility(View.VISIBLE);
+        textViewProfileName.setText(String.format("ProfileName: %s", profileName));
+        textViewProfileName.setVisibility(View.VISIBLE);
+        textViewIccid.setText(String.format("ICCID: %s", iccid));
+        textViewIccid.setVisibility(View.VISIBLE);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -451,9 +463,11 @@ final public class DownloadActivity extends AppCompatActivity {
         if(authenticateResult != null) {
             String providerName = authenticateResult.getProfileMetadata().getProvider();
             Boolean isCcRequired = authenticateResult.getCcRequired();
+            String profileName = authenticateResult.getProfileMetadata().getName();
+            String iccid = ProfileMetadata.formatIccidUserString(authenticateResult.getProfileMetadata().getIccid());
 
             // Prepare the UI for download
-            setDownloadScreen(providerName);
+            setDownloadScreen(providerName, profileName, iccid);
 
             // Get confirmation code if needed
             String confirmationCode = null;
