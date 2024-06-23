@@ -216,7 +216,7 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
         }
 
         if (Preferences.getKeepActiveProfile() && isEnabled) {
-            buttonEnableDisable.setVisibility(View.GONE);
+//            buttonEnableDisable.setVisibility(View.GONE);
             buttonDelete.setVisibility(View.GONE);
         }
     }
