@@ -100,7 +100,18 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
         if(euiccConnection == null) {
             throw new Exception("Error: eUICC connection not available to LPA.");
         } else {
-            return euiccConnection.resetEuicc();
+            int i = 10;
+            boolean isOpen =  false;
+            while (i > 0) {
+                try {
+                    isOpen = euiccConnection.resetEuicc();
+                    if (isOpen) return isOpen ;
+                } catch (Exception ignore) {
+                } finally {
+                    i--;
+                }
+            }
+            return isOpen;
         }
     }
 
