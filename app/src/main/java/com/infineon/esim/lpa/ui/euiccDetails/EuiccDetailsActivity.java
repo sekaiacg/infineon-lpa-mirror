@@ -186,7 +186,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
                 String dataHex = str.substring(dataStartIndex, dataEndIndex);
                 long dataValue = Long.parseLong(dataHex, 16);
                 double dataKB = dataValue / 1024.0d;
-                memoryDataList.add(String.format(Locale.US,"%.2f",dataKB));
+                memoryDataList.add(String.format(Locale.US,"%.3f",dataKB));
             } else {
                 memoryDataList.add("Not Found");
             }
