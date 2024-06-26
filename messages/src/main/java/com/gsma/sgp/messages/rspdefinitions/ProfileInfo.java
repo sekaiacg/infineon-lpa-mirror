@@ -364,14 +364,6 @@ public class ProfileInfo implements BerType, Serializable {
 		return profileSize;
 	}
 
-	public void setRefArDo(Bf76Tag refArDo) {
-		this.refArDo = refArDo;
-	}
-
-	public Bf76Tag getRefArDo() {
-		return refArDo;
-	}
-
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -782,9 +774,8 @@ public class ProfileInfo implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 118)) {
-			refArDo = new Bf76Tag();
-			subCodeLength += refArDo.decode(is, false);
-			if (subCodeLength == totalLength) {
+			if (subCodeLength <= totalLength){
+				is.skip(totalLength - subCodeLength);
 				return codeLength;
 			}
 		}
@@ -1054,18 +1045,6 @@ public class ProfileInfo implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("profileSize: ").append(profileSize);
-			firstSelectedElement = false;
-		}
-
-		if (refArDo != null) {
-			if (!firstSelectedElement) {
-				sb.append(",\n");
-			}
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("refArDo: ");
-			refArDo.appendAsString(sb, indentLevel + 1);
 			firstSelectedElement = false;
 		}
 
