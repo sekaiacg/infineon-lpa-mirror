@@ -88,6 +88,7 @@ public class DataModel implements StatusAndEventHandler{
             case DELETE_PROFILE_FINISHED:
             case DISABLE_PROFILE_FINISHED:
             case SET_NICKNAME_FINISHED:
+            case REFRESH_PROFILE_LIST:
                 refreshProfileList();
                 break;
         }

@@ -152,7 +152,10 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
                         ProfileActionType.PROFILE_ACTION_ENABLE,
                         profile),
                 result -> statusAndEventHandler.onStatusChange(ActionStatus.ENABLE_PROFILE_FINISHED),
-                e -> statusAndEventHandler.onError(new Error("Error during enabling profile.", e.getMessage())));
+                e -> {
+                    statusAndEventHandler.onError(new Error("Error during enabling profile.", e.getMessage()));
+                    statusAndEventHandler.onStatusChange(ActionStatus.REFRESH_PROFILE_LIST);
+                });
     }
 
     public void disableProfile(ProfileMetadata profile) {
@@ -168,7 +171,10 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
                         ProfileActionType.PROFILE_ACTION_DISABLE,
                         profile),
                 result -> statusAndEventHandler.onStatusChange(ActionStatus.DISABLE_PROFILE_FINISHED),
-                e -> statusAndEventHandler.onError(new Error("Error during disabling of profile.", e.getMessage())));
+                e -> {
+                    statusAndEventHandler.onError(new Error("Error during disabling of profile.", e.getMessage()));
+                    statusAndEventHandler.onStatusChange(ActionStatus.REFRESH_PROFILE_LIST);
+                });
     }
 
     public void deleteProfile(ProfileMetadata profile) {
@@ -178,7 +184,10 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
                         ProfileActionType.PROFILE_ACTION_DELETE,
                         profile),
                 result -> statusAndEventHandler.onStatusChange(ActionStatus.DELETE_PROFILE_FINISHED),
-                e -> statusAndEventHandler.onError(new Error("Error during deleting of profile.", e.getMessage())));
+                e -> {
+                    statusAndEventHandler.onError(new Error("Error during deleting of profile.", e.getMessage()));
+                    statusAndEventHandler.onStatusChange(ActionStatus.REFRESH_PROFILE_LIST);
+                });
     }
 
 
@@ -191,7 +200,10 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
 
         new TaskRunner().executeAsync(profileActionTask,
                 result -> statusAndEventHandler.onStatusChange(ActionStatus.SET_NICKNAME_FINISHED),
-                e -> statusAndEventHandler.onError(new Error("Error during setting nickname of profile.", e.getMessage())));
+                e -> {
+                    statusAndEventHandler.onError(new Error("Error during setting nickname of profile.", e.getMessage()));
+                    statusAndEventHandler.onStatusChange(ActionStatus.REFRESH_PROFILE_LIST);
+                });
     }
 
     public void handleAndClearAllNotifications() {
@@ -201,7 +213,10 @@ public final class LocalProfileAssistant extends LocalProfileAssistantCoreImpl i
 
         new TaskRunner().executeAsync(handleAndClearAllNotificationsTask,
                 result -> statusAndEventHandler.onStatusChange(ActionStatus.CLEAR_ALL_NOTIFICATIONS_FINISHED),
-                e -> statusAndEventHandler.onError(new Error("Error during clearing of all eUICC notifications.", e.getMessage())));
+                e -> {
+                    statusAndEventHandler.onError(new Error("Error during clearing of all eUICC notifications.", e.getMessage()));
+                    statusAndEventHandler.onStatusChange(ActionStatus.REFRESH_PROFILE_LIST);
+                });
     }
 
     public void startAuthentication(ActivationCode activationCode) {
